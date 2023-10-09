@@ -1,0 +1,52 @@
+.sidebar-container {
+  width: 200px;
+  height: 100%;
+  background-color: #2f3136;
+  color: white;
+  padding: 1em;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.user-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 5px;
+  cursor: default;
+}
+
+.sidebar-title {
+  color: #8e9297;
+  font-size: 15px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.channel-add-member-button {
+  padding: 10px 20px;
+  background-color: #7289da;
+  border: none;
+  border-radius: 3px;
+  color: #fff;
+  font-weight: 400;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 10px 8px;
+  cursor: pointer;
+}
+
+.avatar-container {
+  display: flex;
+  align-items: center;
+  margin-right: 8px;
+}
+
+.highlighted {
+  background-color: #7289da;
+  color: #fff;
+  padding: 2px 4px;
+  border-radius: 4px;
+}

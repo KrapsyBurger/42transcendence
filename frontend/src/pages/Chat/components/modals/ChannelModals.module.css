@@ -1,0 +1,33 @@
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modal-input {
+  padding: 0.5em;
+  border: none;
+  border-radius: 5px;
+  background-color: #40444b;
+  color: white;
+}
+
+.modal-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: white;
+}
+
+.modal-button-section {
+  display: flex;
+  justify-content: space-between;
+}
+
+.modal-button {
+  padding: 0.5em 1em;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  background-color: #7289da;
+}

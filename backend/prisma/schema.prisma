@@ -1,0 +1,185 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    username String @unique
+    hash     String
+    email    String @unique
+    avatar   String
+
+    firstName String?
+    lastName  String?
+
+    twoFactorAuthenticationSecret    String
+    isTwoFactorAuthenticationEnabled Boolean
+    isQrCodeScanned                  Boolean
+
+    numberOfGamesPlayed Int @default(0)
+    numberOfWins        Int @default(0)
+
+    channels            Channel[]       @relation("ChannelMembers")
+    adminIn             ChannelAdmins[] @relation("ChannelAdmins")
+    bannedIn            ChannelBans[]   @relation("ChannelBans")
+    mutedIn             ChannelMutes[]  @relation("ChannelMutes")
+    ownedChannels       Channel[]       @relation("ChannelOwner")
+    messagesSent        Message[]       @relation("MessageSender")
+    readMessages        MessageRead[]
+    blocks              UserBlocks[]    @relation("Blocker")
+    blockedBy           UserBlocks[]    @relation("Blocked")
+    gamesAsFirstPlayer  Game[]          @relation("firstPlayer")
+    gamesAsSecondPlayer Game[]          @relation("secondPlayer")
+    friends1            Friendship[]    @relation("FriendshipToUser1")
+    friends2            Friendship[]    @relation("FriendshipToUser2")
+    sentRequests        FriendRequest[] @relation("sentRequests")
+    receivedRequests    FriendRequest[] @relation("receivedRequests")
+    gamesWon            Game[]          @relation("GamesWon")
+    sentGameInvites     GameInvite[]    @relation("sentGameInvites")
+    receivedGameInvites GameInvite[]    @relation("receivedGameInvites")
+
+    @@map("users")
+}
+
+model UserBlocks {
+    blockerId Int
+    blockedId Int
+    blocker   User @relation("Blocker", fields: [blockerId], references: [id])
+    blocked   User @relation("Blocked", fields: [blockedId], references: [id])
+
+    @@id([blockerId, blockedId])
+}
+
+model Message {
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now())
+
+    senderId   Int
+    sender     User @relation(fields: [senderId], references: [id], name: "MessageSender")
+    receiverId Int
+
+    content String
+
+    isChannelMessage Boolean       @default(false)
+    messageReads     MessageRead[]
+
+    @@map("messages")
+}
+
+model Channel {
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now())
+
+    name        String  @unique
+    isPrivate   Boolean
+    password    String?
+    description String?
+
+    ownerId Int
+    owner   User @relation(fields: [ownerId], references: [id], name: "ChannelOwner")
+
+    members User[]          @relation("ChannelMembers")
+    admins  ChannelAdmins[] @relation("ChannelAdmins")
+    bans    ChannelBans[]   @relation("ChannelBans")
+    mutes   ChannelMutes[]  @relation("ChannelMutes")
+}
+
+model ChannelAdmins {
+    userId    Int
+    channelId Int
+    user      User    @relation(fields: [userId], references: [id], name: "ChannelAdmins")
+    channel   Channel @relation(fields: [channelId], references: [id], name: "ChannelAdmins")
+
+    @@id([userId, channelId])
+}
+
+model ChannelBans {
+    userId    Int
+    channelId Int
+    user      User    @relation(fields: [userId], references: [id], name: "ChannelBans")
+    channel   Channel @relation(fields: [channelId], references: [id], name: "ChannelBans")
+
+    @@id([userId, channelId])
+}
+
+model ChannelMutes {
+    userId         Int
+    channelId      Int
+    user           User     @relation(fields: [userId], references: [id], name: "ChannelMutes")
+    channel        Channel  @relation(fields: [channelId], references: [id], name: "ChannelMutes")
+    muteExpiration DateTime
+
+    @@id([userId, channelId])
+}
+
+model MessageRead {
+    id        Int      @id @default(autoincrement())
+    userId    Int
+    messageId Int
+    readAt    DateTime @default(now())
+    user      User     @relation(fields: [userId], references: [id])
+    message   Message  @relation(fields: [messageId], references: [id])
+
+    @@index([userId, messageId], name: "user_message_idx")
+}
+
+model Game {
+    id                  Int      @id @default(autoincrement())
+    createdAt           DateTime @default(now())
+    firstPlayerId       Int
+    secondPlayerId      Int
+    winnerId            Int? // Id of the winner
+    firstPlayerPoints   Int // Points earned by the first player
+    secondPlayerPoints  Int // Points earned by the second player
+    isReadyFirstPlayer  Boolean
+    isReadySecondPlayer Boolean
+    gameType            String // Game type, can be either "challenge" or "matchmaking"
+    gameStatus          String // "paused", "playing", "over"
+    firstPlayerPaddleY  Float
+    secondPlayerPaddleY Float
+    ballX               Float
+    ballY               Float
+
+    firstPlayer  User  @relation("firstPlayer", fields: [firstPlayerId], references: [id])
+    secondPlayer User  @relation("secondPlayer", fields: [secondPlayerId], references: [id])
+    winner       User? @relation("GamesWon", fields: [winnerId], references: [id])
+
+    @@map("games")
+}
+
+model Friendship {
+    id      Int  @id @default(autoincrement())
+    user1Id Int
+    user2Id Int
+    user1   User @relation("FriendshipToUser1", fields: [user1Id], references: [id])
+    user2   User @relation("FriendshipToUser2", fields: [user2Id], references: [id])
+
+    @@unique([user1Id, user2Id])
+}
+
+model FriendRequest {
+    id         Int  @id @default(autoincrement())
+    senderId   Int
+    receiverId Int
+    sender     User @relation("sentRequests", fields: [senderId], references: [id])
+    receiver   User @relation("receivedRequests", fields: [receiverId], references: [id])
+}
+
+model GameInvite {
+    id        Int  @id @default(autoincrement())
+    inviterId Int
+    inviteeId Int
+    inviter   User @relation("sentGameInvites", fields: [inviterId], references: [id])
+    invitee   User @relation("receivedGameInvites", fields: [inviteeId], references: [id])
+}

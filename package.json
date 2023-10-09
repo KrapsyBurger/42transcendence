@@ -1,0 +1,28 @@
+{
+  "dependencies": {
+    "@nestjs/config": "^3.0.0",
+    "axios": "^1.4.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "simple-oauth2": "^5.0.0"
+  },
+  "name": "ft_transcendence",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vfiszbin/ft_transcendence.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vfiszbin/ft_transcendence/issues"
+  },
+  "homepage": "https://github.com/vfiszbin/ft_transcendence#readme",
+  "description": ""
+}

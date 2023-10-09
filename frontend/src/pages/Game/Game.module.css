@@ -1,0 +1,88 @@
+.ball {
+  position: absolute;
+  width: 2%;
+  height: 2%;
+  border-radius: 100%;
+  left: 50%;
+  top: 50%;
+}
+
+.player1,
+.player2 {
+  position: absolute;
+  width: 2%;
+  height: 20%; /* height of paddle, 10% of game-court height = 0.1  !!! */
+}
+
+.player1 {
+  left: 1%;
+  top: 50%;
+}
+
+.player2 {
+  right: 1%;
+  top: 50%;
+}
+
+.score-title {
+  color: #fff;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.matchmaking-and-invite-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  grid-area: main;
+}
+
+.divider {
+  width: 80%;
+  margin: 20px 0;
+}
+
+.margins {
+  margin: 20px 0;
+}
+
+.grey {
+  background-color: grey;
+}
+
+.grey .ball {
+  background-color: red;
+}
+
+.grey .player1,
+.grey .player2 {
+  background-color: black;
+}
+
+.pink {
+  background-color: #ffc0cb; /* Light pink */
+}
+
+.pink .ball {
+  background-color: rgb(67, 131, 15);
+}
+
+.pink .player1,
+.pink .player2 {
+  background-color: purple;
+}
+
+.blue {
+  background-color: #6495ed; 
+}
+
+.blue .ball {
+  background-color: #ffae00; 
+}
+
+.blue .player1,
+.blue .player2 {
+  background-color: #05117e; 
+}
+
